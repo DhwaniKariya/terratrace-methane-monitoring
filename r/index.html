@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methane Intelligence Platform — AI-Driven Carbon Operations Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --dark-bg: #0A0E1A; --panel-bg: #131824; --card-bg: #1A1F2E;
+  --border: rgba(99,179,237,.12); --primary: #63B3ED; --primary-glow: rgba(99,179,237,.15);
+  --warning: #F6AD55; --warning-glow: rgba(246,173,85,.15);
+  --danger: #FC8181; --danger-glow: rgba(252,129,129,.15);
+  --success: #68D391; --success-glow: rgba(104,211,145,.15);
+  --text: #E2E8F0; --text-muted: #A0AEC0; --text-dim: #718096;
+  --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.16), 0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg: 0 10px 20px rgba(0,0,0,.2), 0 6px 6px rgba(0,0,0,.15);
+}
+html, body { height:100%; background:var(--dark-bg); color:var(--text); font-family:var(--font-main); font-size:14px; overflow:hidden; }
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgba(99,179,237,.2); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:rgba(99,179,237,.3); }
+
+#app { display:flex; height:100vh; overflow:hidden; }
+
+/* Sidebar */
+#sidebar { width:260px; background:var(--panel-bg); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; }
+.logo { padding:24px 20px; border-bottom:1px solid var(--border); }
+.logo-text { font-size:20px; font-weight:800; color:var(--primary); letter-spacing:-.5px; }
+.logo-sub { font-size:10px; color:var(--text-muted); font-family:var(--font-mono); letter-spacing:.5px; margin-top:4px; }
+.nav-section { padding:16px 12px 8px; }
+.nav-label { font-size:10px; color:var(--text-dim); font-family:var(--font-mono); letter-spacing:1px; text-transform:uppercase; padding:0 8px 8px; font-weight:600; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:6px; cursor:pointer; color:var(--text-muted); font-size:13px; transition:all .2s; user-select:none; margin-bottom:2px; }
+.nav-item:hover { background:var(--primary-glow); color:var(--primary); }
+.nav-item.active { background:var(--primary-glow); color:var(--primary); font-weight:600; }
+.nav-icon { font-size:16px; width:20px; text-align:center; }
+.nav-badge { margin-left:auto; background:var(--danger); color:#fff; font-size:10px; font-weight:700; padding:2px 8px; border-radius:12px; font-family:var(--font-mono); }
+
+/* Main Content */
+#main { flex:1; display:flex; flex-direction:column; overflow:hidden; }
+#topbar { height:72px; background:var(--panel-bg); border-bottom:1px solid var(--border); display:flex; align-items:center; padding:0 28px; gap:16px; }
+.topbar-title { font-size:18px; font-weight:700; color:var(--text); letter-spacing:-.3px; }
+.topbar-subtitle { font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-top:2px; }
+.topbar-kpi { display:flex; align-items:center; gap:6px; padding:6px 14px; border:1px solid var(--border); border-radius:8px; font-size:11px; font-family:var(--font-mono); color:var(--text-muted); background:rgba(255,255,255,.02); }
+.topbar-kpi-value { color:var(--primary); font-weight:600; margin-left:4px; }
+
+#content { flex:1; overflow-y:auto; padding:24px 28px; }
+
+/* Cards */
+.grid { display:grid; gap:16px; }
+.grid-2 { grid-template-columns:1fr 1fr; }
+.grid-3 { grid-template-columns:repeat(3,1fr); }
+.grid-4 { grid-template-columns:repeat(4,1fr); }
+.grid-5 { grid-template-columns:repeat(5,1fr); }
+
+.card { background:var(--card-bg); border:1px solid var(--border); border-radius:10px; padding:20px; box-shadow:var(--shadow-sm); }
+.card-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.card-title { font-size:11px; color:var(--text-dim); font-family:var(--font-mono); letter-spacing:.8px; text-transform:uppercase; font-weight:600; }
+.card-icon { font-size:18px; color:var(--text-muted); }
+.card-value { font-family:var(--font-mono); font-size:32px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.card-value.primary { color:var(--primary); }
+.card-value.warning { color:var(--warning); }
+.card-value.danger { color:var(--danger); }
+.card-value.success { color:var(--success); }
+.card-sub { font-size:12px; color:var(--text-muted); }
+.card-sub strong { color:var(--text); font-weight:600; }
+
+.section-header { display:flex; align-items:center; justify-content:space-between; margin:32px 0 16px; }
+.section-header:first-child { margin-top:0; }
+.section-title { font-size:16px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:10px; }
+.section-title::before { content:''; width:4px; height:18px; background:var(--primary); border-radius:2px; }
+
+/* Status Badges */
+.status-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 12px; border-radius:16px; font-size:11px; font-family:var(--font-mono); font-weight:600; }
+.status-normal { background:var(--success-glow); color:var(--success); border:1px solid var(--success); }
+.status-warning { background:var(--warning-glow); color:var(--warning); border:1px solid var(--warning); }
+.status-critical { background:var(--danger-glow); color:var(--danger); border:1px solid var(--danger); }
+
+/* Tables */
+.data-table { width:100%; border-collapse:collapse; font-size:13px; }
+.data-table thead { border-bottom:1px solid var(--border); }
+.data-table th { text-align:left; padding:12px 10px; color:var(--text-dim); font-family:var(--font-mono); font-size:10px; letter-spacing:.6px; text-transform:uppercase; font-weight:600; }
+.data-table td { padding:14px 10px; border-bottom:1px solid rgba(255,255,255,.03); color:var(--text); }
+.data-table tr:hover td { background:rgba(99,179,237,.05); }
+
+/* Alert Boxes */
+.alert-box { border-radius:8px; padding:16px 18px; margin-bottom:16px; border-left:4px solid; }
+.alert-info { background:var(--primary-glow); border-color:var(--primary); }
+.alert-warning { background:var(--warning-glow); border-color:var(--warning); }
+.alert-danger { background:var(--danger-glow); border-color:var(--danger); }
+.alert-success { background:var(--success-glow); border-color:var(--success); }
+.alert-title { font-weight:600; margin-bottom:6px; font-size:13px; }
+.alert-body { font-size:12px; color:var(--text-muted); line-height:1.6; }
+
+/* Event List */
+.event-list { display:flex; flex-direction:column; gap:10px; }
+.event-item { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:16px; display:flex; gap:14px; transition:border-color .2s; }
+.event-item:hover { border-color:var(--primary); }
+.event-icon { width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.event-icon.danger { background:var(--danger-glow); color:var(--danger); }
+.event-icon.warning { background:var(--warning-glow); color:var(--warning); }
+.event-icon.success { background:var(--success-glow); color:var(--success); }
+.event-info { flex:1; }
+.event-title { font-weight:600; font-size:14px; color:var(--text); margin-bottom:4px; }
+.event-meta { font-size:11px; color:var(--text-muted); font-family:var(--font-mono); display:flex; gap:12px; flex-wrap:wrap; }
+.event-meta-item { display:flex; align-items:center; gap:4px; }
+
+/* Progress Bars */
+.progress-bar { height:8px; background:rgba(255,255,255,.05); border-radius:4px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:4px; transition:width 1s ease; }
+.progress-fill.primary { background:var(--primary); }
+.progress-fill.success { background:var(--success); }
+.progress-fill.warning { background:var(--warning); }
+.progress-fill.danger { background:var(--danger); }
+
+/* Chart Container */
+.chart-container { height:200px; display:flex; align-items:flex-end; gap:8px; padding:16px 0; }
+.chart-bar { flex:1; background:var(--primary); border-radius:4px 4px 0 0; min-height:4px; transition:height .8s ease; position:relative; }
+.chart-bar.success { background:var(--success); }
+.chart-bar.warning { background:var(--warning); }
+.chart-bar.danger { background:var(--danger); }
+.chart-label { text-align:center; font-size:10px; color:var(--text-muted); font-family:var(--font-mono); margin-top:8px; }
+
+/* Risk Score */
+.risk-score { display:flex; align-items:center; justify-content:center; width:120px; height:120px; border-radius:50%; border:8px solid; font-size:36px; font-weight:800; font-family:var(--font-mono); margin:0 auto; }
+.risk-score.low { border-color:var(--success); color:var(--success); }
+.risk-score.medium { border-color:var(--warning); color:var(--warning); }
+.risk-score.high { border-color:var(--danger); color:var(--danger); }
+
+/* Tabs */
+.tabs { display:flex; gap:8px; border-bottom:1px solid var(--border); margin-bottom:24px; }
+.tab { padding:12px 20px; font-size:13px; color:var(--text-muted); border-bottom:2px solid transparent; cursor:pointer; transition:all .2s; font-weight:500; }
+.tab:hover { color:var(--text); }
+.tab.active { color:var(--primary); border-bottom-color:var(--primary); font-weight:600; }
+
+/* Buttons */
+.btn { padding:10px 20px; border-radius:6px; border:none; font-family:var(--font-main); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; display:inline-flex; align-items:center; gap:8px; }
+.btn-primary { background:var(--primary); color:var(--dark-bg); }
+.btn-primary:hover { background:rgba(99,179,237,.8); }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text-muted); }
+.btn-outline:hover { border-color:var(--primary); color:var(--primary); }
+
+/* Panel */
+.panel { display:none; }
+.panel.active { display:block; }
+
+/* Metric Grid */
+.metric-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+.metric-item { display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.metric-item:last-child { border-bottom:none; }
+.metric-label { font-size:13px; color:var(--text-muted); }
+.metric-value { font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--text); }
+
+/* Equipment Type Badge */
+.equipment-badge { display:inline-block; padding:4px 10px; border-radius:6px; font-size:11px; font-family:var(--font-mono); font-weight:600; }
+.eq-compressor { background:rgba(99,179,237,.15); color:var(--primary); border:1px solid var(--primary); }
+.eq-valve { background:rgba(246,173,85,.15); color:var(--warning); border:1px solid var(--warning); }
+.eq-tank { background:rgba(104,211,145,.15); color:var(--success); border:1px solid var(--success); }
+.eq-flare { background:rgba(252,129,129,.15); color:var(--danger); border:1px solid var(--danger); }
+.eq-pipeline { background:rgba(160,174,192,.15); color:var(--text-muted); border:1px solid var(--text-muted); }
+
+/* Forecast Card */
+.forecast-item { background:var(--card-bg); border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:10px; }
+.forecast-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.forecast-asset { font-weight:600; color:var(--text); font-size:14px; }
+.forecast-risk { font-family:var(--font-mono); font-size:12px; }
+.forecast-details { display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px; }
+.forecast-detail-label { color:var(--text-dim); }
+.forecast-detail-value { color:var(--text); font-family:var(--font-mono); font-weight:500; }
+
+/* Verification Badge */
+.verification-badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:6px; font-size:11px; font-family:var(--font-mono); font-weight:600; }
+.verified { background:var(--success-glow); color:var(--success); border:1px solid var(--success); }
+.pending { background:rgba(160,174,192,.15); color:var(--text-muted); border:1px solid var(--text-muted); }
+.not-eligible { background:rgba(252,129,129,.15); color:var(--danger); border:1px solid var(--danger); }
+
+@media(max-width:1200px) {
+  .grid-5 { grid-template-columns:repeat(3,1fr); }
+  .grid-4 { grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:900px) {
+  #sidebar { width:220px; }
+  .grid-3, .grid-4, .grid-5 { grid-template-columns:1fr 1fr; }
+}
+@media(max-width:600px) {
+  .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <nav id="sidebar">
+    <div class="logo">
+      <div class="logo-text">🛢️ TreeaTrace</div>
+      <div class="logo-sub">AI-DRIVEN CARBON OPERATIONS</div>
+    </div>
+    
+    <div class="nav-section">
+      <div class="nav-label">Core Operations</div>
+      <div class="nav-item active" onclick="switchView('command')">
+        <span class="nav-icon">📊</span> Command Center
+      </div>
+      <div class="nav-item" onclick="switchView('detection')">
+        <span class="nav-icon">🔍</span> Event Detection
+        <span class="nav-badge">12</span>
+      </div>
+      <div class="nav-item" onclick="switchView('decisions')">
+        <span class="nav-icon">⚙️</span> Decision Engine
+      </div>
+      <div class="nav-item" onclick="switchView('forecast')">
+        <span class="nav-icon">🔮</span> Risk Forecasting
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Intelligence & Verification</div>
+      <div class="nav-item" onclick="switchView('network')">
+        <span class="nav-icon">🌐</span> Industry Network
+      </div>
+      <div class="nav-item" onclick="switchView('verification')">
+        <span class="nav-icon">✅</span> Avoided Emissions
+      </div>
+      <div class="nav-item" onclick="switchView('super-emitter')">
+        <span class="nav-icon">⚠️</span> Super-Emitters
+        <span class="nav-badge">3</span>
+      </div>
+    </div>
+  </nav>
+
+  <div id="main">
+    <div id="topbar">
+      <div>
+        <div class="topbar-title">Methane Operations Dashboard</div>
+        <div class="topbar-subtitle">Real-time carbon intelligence for oil & gas operations</div>
+      </div>
+      <div style="flex:1"></div>
+      <div class="topbar-kpi">
+        <span>Last Update:</span><span class="topbar-kpi-value">2 min ago</span>
+      </div>
+      <div class="topbar-kpi">
+        <span>Active Events:</span><span class="topbar-kpi-value">12</span>
+      </div>
+    </div>
+
+    <div id="content">
+      <!-- COMMAND CENTER PANEL -->
+      <div id="panel-command" class="panel active">
+        <div class="section-header">
+          <div class="section-title">Executive Command Center</div>
+        </div>
+
+        <div class="grid grid-5">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Total CH₄ Emissions</div>
+              <div class="card-icon">🌫️</div>
+            </div>
+            <div class="card-value danger">2,847 kg/hr</div>
+            <div class="card-sub"><strong>8,542 tCO₂e</strong> equivalent</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Active Events</div>
+              <div class="card-icon">🔔</div>
+            </div>
+            <div class="card-value warning">12</div>
+            <div class="card-sub">3 critical, 5 high, 4 normal</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Super-Emitter Status</div>
+              <div class="card-icon">⚠️</div>
+            </div>
+            <div class="card-value danger">CRITICAL</div>
+            <div class="card-sub">3 super-emitters detected</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Avoided Emissions</div>
+              <div class="card-icon">✅</div>
+            </div>
+            <div class="card-value success">1,245 tCO₂e</div>
+            <div class="card-sub">This month: +18% vs baseline</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Operational Risk Score</div>
+              <div class="card-icon">📈</div>
+            </div>
+            <div class="card-value warning">72/100</div>
+            <div class="card-sub">High risk — action required</div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top:32px">
+          <div class="section-title">Asset Health & Financial Impact</div>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Asset Health Overview</div>
+            </div>
+            <div style="margin-top:16px">
+              <div class="metric-item">
+                <div class="metric-label">🟢 Healthy Assets</div>
+                <div class="metric-value" style="color:var(--success)">142</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">🟡 Warning Status</div>
+                <div class="metric-value" style="color:var(--warning)">28</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">🔴 Critical Status</div>
+                <div class="metric-value" style="color:var(--danger)">8</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Financial Impact (24h)</div>
+            </div>
+            <div style="margin-top:16px">
+              <div class="metric-item">
+                <div class="metric-label">Emission Cost</div>
+                <div class="metric-value">$124,580</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Carbon Impact</div>
+                <div class="metric-value">$89,320</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Total Loss</div>
+                <div class="metric-value" style="color:var(--danger)">$213,900</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Risk Distribution</div>
+            </div>
+            <div class="risk-score high">72</div>
+            <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted)">AI-Generated Risk Index</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETECTION MODULE PANEL -->
+      <div id="panel-detection" class="panel">
+        <div class="section-header">
+          <div class="section-title">Methane Event Detection Module</div>
+        </div>
+
+        <div class="event-list">
+          <div class="event-item">
+            <div class="event-icon danger">🔥</div>
+            <div class="event-info">
+              <div class="event-title">Super-Emitter: Compressor Station Alpha-7</div>
+              <div class="event-meta">
+                <div class="event-meta-item">📍 <strong>34.0522°N, -118.2437°W</strong></div>
+                <div class="event-meta-item">⚡ <strong>842 kg/hr</strong></div>
+                <div class="event-meta-item">⏱️ <strong>Duration: 4h 23m</strong></div>
+                <div class="event-meta-item">🛰️ <strong>Satellite</strong> (98% confidence)</div>
+              </div>
+            </div>
+            <div>
+              <span class="status-badge status-critical">SUPER-EMITTER</span>
+            </div>
+          </div>
+
+          <div class="event-item">
+            <div class="event-icon warning">⚠️</div>
+            <div class="event-info">
+              <div class="event-title">Major Leak: Pipeline Section B-14</div>
+              <div class="event-meta">
+                <div class="event-meta-item">📍 <strong>33.9425°N, -117.2308°W</strong></div>
+                <div class="event-meta-item">⚡ <strong>324 kg/hr</strong></div>
+                <div class="event-meta-item">⏱️ <strong>Duration: 1h 47m</strong></div>
+                <div class="event-meta-item">🤖 <strong>IoT Sensor</strong> (95% confidence)</div>
+              </div>
+            </div>
+            <div>
+              <span class="status-badge status-warning">MAJOR</span>
+            </div>
+          </div>
+
+          <div class="event-item">
+            <div class="event-icon warning">💨</div>
+            <div class="event-info">
+              <div class="event-title">Fugitive Leak: Valve Station TX-03</div>
+              <div class="event-meta">
+                <div class="event-meta-item">📍 <strong>32.7767°N, -96.7970°W</strong></div>
+                <div class="event-meta-item">⚡ <strong>187 kg/hr</strong></div>
+                <div class="event-meta-item">⏱️ <strong>Duration: 6h 12m</strong></div>
+                <div class="event-meta-item">🚁 <strong>Drone</strong> (92% confidence)</div>
+              </div>
+            </div>
+            <div>
+              <span class="status-badge status-warning">MAJOR</span>
+            </div>
+          </div>
+
+          <div class="event-item">
+            <div class="event-icon success">🔧</div>
+            <div class="event-info">
+              <div class="event-title">Normal Venting: Storage Tank C-09</div>
+              <div class="event-meta">
+                <div class="event-meta-item">📍 <strong>29.7604°N, -95.3698°W</strong></div>
+                <div class="event-meta-item">⚡ <strong>45 kg/hr</strong></div>
+                <div class="event-meta-item">⏱️ <strong>Duration: 32m</strong></div>
+                <div class="event-meta-item">📊 <strong>SCADA</strong> (89% confidence)</div>
+              </div>
+            </div>
+            <div>
+              <span class="status-badge status-normal">NORMAL</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top:32px">
+          <div class="section-title">Detection Summary by Equipment Type</div>
+        </div>
+
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Equipment Type</th>
+                <th>Total Events</th>
+                <th>Avg. Emission Rate</th>
+                <th>Total CH₄ Released</th>
+                <th>Detection Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="equipment-badge eq-compressor">COMPRESSOR</span></td>
+                <td>3</td>
+                <td>612 kg/hr</td>
+                <td>8,542 kg</td>
+                <td>Satellite, IoT</td>
+              </tr>
+              <tr>
+                <td><span class="equipment-badge eq-valve">VALVE</span></td>
+                <td>4</td>
+                <td>234 kg/hr</td>
+                <td>4,124 kg</td>
+                <td>Drone, IoT</td>
+              </tr>
+              <tr>
+                <td><span class="equipment-badge eq-tank">TANK</span></td>
+                <td>2</td>
+                <td>87 kg/hr</td>
+                <td>1,245 kg</td>
+                <td>SCADA</td>
+              </tr>
+              <tr>
+                <td><span class="equipment-badge eq-pipeline">PIPELINE</span></td>
+                <td>2</td>
+                <td>421 kg/hr</td>
+                <td>6,287 kg</td>
+                <td>IoT, Satellite</td>
+              </tr>
+              <tr>
+                <td><span class="equipment-badge eq-flare">FLARE</span></td>
+                <td>1</td>
+                <td>156 kg/hr</td>
+                <td>892 kg</td>
+                <td>Drone</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- DECISION ENGINE PANEL -->
+      <div id="panel-decisions" class="panel">
+        <div class="section-header">
+          <div class="section-title">Operational Decision Engine</div>
+        </div>
+
+        <div class="alert-box alert-danger">
+          <div class="alert-title">🚨 3 Critical Actions Required — Immediate Response Needed</div>
+          <div class="alert-body">AI has identified critical operational adjustments to reduce methane emissions. Review recommendations below and approve interventions.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Recommendation #R-2024-0847 — CRITICAL</div>
+          </div>
+          <div style="margin-top:16px">
+            <div class="metric-item">
+              <div class="metric-label">Asset ID</div>
+              <div class="metric-value">COMP-ALPHA-7</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Root Cause</div>
+              <div class="metric-value">Seal degradation + pressure anomaly</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Suggested Action</div>
+              <div class="metric-value" style="color:var(--warning)">Isolate pipeline, reduce pressure to 85 PSI</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Expected Reduction</div>
+              <div class="metric-value" style="color:var(--success)">642 kg CH₄ avoided</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Operational Impact</div>
+              <div class="metric-value" style="color:var(--danger)">2-3 hour downtime</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">AI Confidence</div>
+              <div class="metric-value">94%</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Estimated Cost</div>
+              <div class="metric-value">$18,500</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Decision Status</div>
+              <div class="metric-value"><span class="status-badge status-warning">PENDING</span></div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Assigned Team</div>
+              <div class="metric-value">Field Ops Team C</div>
+            </div>
+          </div>
+          <div style="margin-top:20px;display:flex;gap:10px">
+            <button class="btn btn-primary">✅ Approve Action</button>
+            <button class="btn btn-outline">❌ Reject</button>
+            <button class="btn btn-outline">📋 Request More Info</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div class="card-header">
+            <div class="card-title">Recommendation #R-2024-0848 — HIGH</div>
+          </div>
+          <div style="margin-top:16px">
+            <div class="metric-item">
+              <div class="metric-label">Asset ID</div>
+              <div class="metric-value">PIPE-B-14</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Root Cause</div>
+              <div class="metric-value">Valve failure</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Suggested Action</div>
+              <div class="metric-value" style="color:var(--warning)">Replace valve, inspect adjacent sections</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Expected Reduction</div>
+              <div class="metric-value" style="color:var(--success)">324 kg CH₄ avoided</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Operational Impact</div>
+              <div class="metric-value" style="color:var(--warning)">4-6 hour downtime</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">AI Confidence</div>
+              <div class="metric-value">89%</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Estimated Cost</div>
+              <div class="metric-value">$12,200</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Decision Status</div>
+              <div class="metric-value"><span class="status-badge status-normal">ACCEPTED</span></div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">Assigned Team</div>
+              <div class="metric-value">Field Ops Team A</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORECAST PANEL -->
+      <div id="panel-forecast" class="panel">
+        <div class="section-header">
+          <div class="section-title">Dynamic Carbon Risk Forecasting</div>
+        </div>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Risk Forecast — Next 7 Days</div>
+            </div>
+            <div class="chart-container">
+              <div class="chart-bar danger" style="height:85%"></div>
+              <div class="chart-bar danger" style="height:78%"></div>
+              <div class="chart-bar warning" style="height:62%"></div>
+              <div class="chart-bar warning" style="height:58%"></div>
+              <div class="chart-bar warning" style="height:45%"></div>
+              <div class="chart-bar success" style="height:32%"></div>
+              <div class="chart-bar success" style="height:28%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);font-family:var(--font-mono);margin-top:8px">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Hotspot Prediction Map</div>
+            </div>
+            <div style="text-align:center;padding:40px 0">
+              <div style="font-size:48px">🗺️</div>
+              <div style="margin-top:12px;font-size:13px;color:var(--text-muted)">Geographic risk distribution</div>
+              <div style="margin-top:8px;font-size:11px;color:var(--text-dim)">5 high-risk zones identified</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top:32px">
+          <div class="section-title">Asset Risk Predictions</div>
+        </div>
+
+        <div class="forecast-item">
+          <div class="forecast-header">
+            <div class="forecast-asset">🔧 Compressor Station Beta-3</div>
+            <div class="forecast-risk"><span class="status-badge status-critical">High Risk: 87%</span></div>
+          </div>
+          <div class="forecast-details">
+            <div>
+              <div class="forecast-detail-label">Predicted Emission Level</div>
+              <div class="forecast-detail-value">654 kg/hr</div>
+            </div>
+            <div>
+              <div class="forecast-detail-label">Forecast Period</div>
+              <div class="forecast-detail-value">Next 48 hours</div>
+            </div>
+            <div>
+              <div class="forecast-detail-label">Failure Probability</div>
+              <div class="forecast-detail-value" style="color:var(--danger)">87%</div>
+            </div>
+            <div>
+              <div class="forecast-detail-label">Historical Pattern</div>
+              <div class="forecast-detail-value">Similar to Event #E-2024-0234</div>
+            </div>
+          </div>
+          <div style="margin-top:12px">
+            <div class="alert-box alert-warning">
+              <div class="alert-body">⚠️ Environmental factors: High wind speed (24 mph), Temperature drop (-12°F), Increased operational pressure (110 PSI)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="forecast-item">
+          <div class="forecast-header">
+            <div class="forecast-asset">⚙️ Valve Cluster TX-09</div>
+            <div class="forecast-risk"><span class="status-badge status-warning">Medium Risk: 64%</span></div>
+          </div>
+          <div class="forecast-details">
+            <div>
+              <div class="forecast-detail-label">Predicted Emission Level</div>
+              <div class="forecast-detail-value">287 kg/hr</div>
+            </div>
+            <div>
+              <div class="forecast-detail-label">Forecast Period</div>
+              <div class="forecast-detail-value">Next 72 hours</div>
+            </div>
+            <div>
+              <div class="forecast-detail-label">Failure Probability</div>
+              <div class="forecast-detail-value" style="color:var(--warning)">64%</div>
+            </div>
+            <div>
+              <div class="forecast-detail-label">Historical Pattern</div>
+              <div class="forecast-detail-value">Matches 3 previous incidents</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="forecast-item">
+          <div class="forecast-header">
+            <div class="forecast-asset">🛢️ Storage Tank Array D-12</div>
+            <div class="forecast-risk"><span class="status-badge status-normal">Low Risk: 23%</span></div>
+          </div>
+          <div class="forecast-details">
+            <div>
+              <div class="forecast-detail-label">Predicted Emission Level</div>
+              <div class="forecast-detail-value">52 kg/hr</div>
+            </div>
+            <div>
+              <div class="forecast-detail-label">Forecast Period</div>
+              <div class="forecast-detail-value">Next 7 days</div>
+            </div>
+            <div>
+              <div class="forecast-detail-label">Failure Probability</div>
+              <div class="forecast-detail-value" style="color:var(--success)">23%</div>
+            </div>
+            <div>
+              <div class="forecast-detail-label">Historical Pattern</div>
+              <div class="forecast-detail-value">Normal operation range</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- INDUSTRY NETWORK PANEL -->
+      <div id="panel-network" class="panel">
+        <div class="section-header">
+          <div class="section-title">Industry-wide Methane Intelligence Network</div>
+        </div>
+
+        <div class="alert-box alert-info">
+          <div class="alert-title">🌐 Anonymized Cross-Company Intelligence</div>
+          <div class="alert-body">All data is privacy-preserved and aggregated across 47 participating operators. Individual company data remains confidential.</div>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Industry Average</div>
+            </div>
+            <div class="card-value primary">1,842 kg/hr</div>
+            <div class="card-sub">Average emission intensity</div>
+            <div style="margin-top:12px">
+              <div class="progress-bar">
+                <div class="progress-fill warning" style="width:65%"></div>
+              </div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Your performance: <strong style="color:var(--warning)">Above industry avg (+55%)</strong></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Equipment Failure Rate</div>
+            </div>
+            <div class="card-value warning">8.4%</div>
+            <div class="card-sub">Industry-wide failure frequency</div>
+            <div style="margin-top:12px">
+              <div style="font-size:11px;color:var(--text-muted)">Most common: <strong>Valve failures (42%)</strong></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Geographic Trends</div>
+            </div>
+            <div class="card-value primary">5</div>
+            <div class="card-sub">High-risk regions identified</div>
+            <div style="margin-top:12px">
+              <div style="font-size:11px;color:var(--text-muted)">Top: <strong>Texas Gulf Coast</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top:32px">
+          <div class="section-title">Equipment Risk Index — Industry Benchmark</div>
+        </div>
+
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Equipment Category</th>
+                <th>Failure Frequency</th>
+                <th>Avg. Emission Intensity</th>
+                <th>Geographic Clusters</th>
+                <th>Risk Index</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="equipment-badge eq-compressor">COMPRESSOR</span></td>
+                <td>287 incidents/year</td>
+                <td>642 kg/hr</td>
+                <td>Texas, Oklahoma, Louisiana</td>
+                <td><span style="color:var(--danger);font-weight:600">92/100</span></td>
+              </tr>
+              <tr>
+                <td><span class="equipment-badge eq-valve">VALVE</span></td>
+                <td>534 incidents/year</td>
+                <td>234 kg/hr</td>
+                <td>Texas, New Mexico, California</td>
+                <td><span style="color:var(--danger);font-weight:600">87/100</span></td>
+              </tr>
+              <tr>
+                <td><span class="equipment-badge eq-pipeline">PIPELINE</span></td>
+                <td>142 incidents/year</td>
+                <td>421 kg/hr</td>
+                <td>All regions</td>
+                <td><span style="color:var(--warning);font-weight:600">75/100</span></td>
+              </tr>
+              <tr>
+                <td><span class="equipment-badge eq-tank">TANK</span></td>
+                <td>89 incidents/year</td>
+                <td>87 kg/hr</td>
+                <td>Gulf Coast, Mid-Atlantic</td>
+                <td><span style="color:var(--warning);font-weight:600">58/100</span></td>
+              </tr>
+              <tr>
+                <td><span class="equipment-badge eq-flare">FLARE</span></td>
+                <td>67 incidents/year</td>
+                <td>156 kg/hr</td>
+                <td>Texas, Wyoming</td>
+                <td><span style="color:var(--success);font-weight:600">42/100</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-header" style="margin-top:32px">
+          <div class="section-title">Trend Evolution — Last 12 Months</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Industry Emission Trend</div>
+          </div>
+          <div class="chart-container">
+            <div class="chart-bar danger" style="height:88%"></div>
+            <div class="chart-bar danger" style="height:82%"></div>
+            <div class="chart-bar danger" style="height:79%"></div>
+            <div class="chart-bar warning" style="height:72%"></div>
+            <div class="chart-bar warning" style="height:68%"></div>
+            <div class="chart-bar warning" style="height:64%"></div>
+            <div class="chart-bar warning" style="height:59%"></div>
+            <div class="chart-bar success" style="height:52%"></div>
+            <div class="chart-bar success" style="height:48%"></div>
+            <div class="chart-bar success" style="height:42%"></div>
+            <div class="chart-bar success" style="height:38%"></div>
+            <div class="chart-bar success" style="height:35%"></div>
+          </div>
+          <div style="text-align:center;margin-top:16px;font-size:13px">
+            <span style="color:var(--success);font-weight:600">↓ 35% Reduction</span> in industry-wide emissions over 12 months
+          </div>
+        </div>
+      </div>
+
+      <!-- VERIFICATION PANEL -->
+      <div id="panel-verification" class="panel">
+        <div class="section-header">
+          <div class="section-title">Avoided Emissions Verification Engine</div>
+        </div>
+
+        <div class="grid grid-4">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Total Avoided (MTD)</div>
+            </div>
+            <div class="card-value success">1,245 tCO₂e</div>
+            <div class="card-sub">+18% vs last month</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Verified Interventions</div>
+            </div>
+            <div class="card-value primary">37</div>
+            <div class="card-sub">24 eligible for carbon credits</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Carbon Credit Value</div>
+            </div>
+            <div class="card-value success">$89,320</div>
+            <div class="card-sub">Estimated market value</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Insurance Risk Reduction</div>
+            </div>
+            <div class="card-value primary">14%</div>
+            <div class="card-sub">Estimated premium reduction</div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top:32px">
+          <div class="section-title">Recent Verified Interventions</div>
+        </div>
+
+        <div class="card">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Verification ID</th>
+                <th>Intervention Type</th>
+                <th>Date</th>
+                <th>Baseline</th>
+                <th>Post-Action</th>
+                <th>Avoided CH₄</th>
+                <th>CO₂e Reduction</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>VER-2024-0421</code></td>
+                <td>Valve replacement</td>
+                <td>2024-06-28</td>
+                <td>324 kg/hr</td>
+                <td>12 kg/hr</td>
+                <td>312 kg CH₄</td>
+                <td>187.2 tCO₂e</td>
+                <td><span class="verification-badge verified">VERIFIED</span></td>
+              </tr>
+              <tr>
+                <td><code>VER-2024-0422</code></td>
+                <td>Pressure reduction</td>
+                <td>2024-06-27</td>
+                <td>842 kg/hr</td>
+                <td>124 kg/hr</td>
+                <td>718 kg CH₄</td>
+                <td>430.8 tCO₂e</td>
+                <td><span class="verification-badge verified">VERIFIED</span></td>
+              </tr>
+              <tr>
+                <td><code>VER-2024-0423</code></td>
+                <td>Pipeline isolation</td>
+                <td>2024-06-26</td>
+                <td>187 kg/hr</td>
+                <td>8 kg/hr</td>
+                <td>179 kg CH₄</td>
+                <td>107.4 tCO₂e</td>
+                <td><span class="verification-badge pending">PENDING</span></td>
+              </tr>
+              <tr>
+                <td><code>VER-2024-0424</code></td>
+                <td>Seal repair</td>
+                <td>2024-06-25</td>
+                <td>456 kg/hr</td>
+                <td>34 kg/hr</td>
+                <td>422 kg CH₄</td>
+                <td>253.2 tCO₂e</td>
+                <td><span class="verification-badge verified">VERIFIED</span></td>
+              </tr>
+              <tr>
+                <td><code>VER-2024-0425</code></td>
+                <td>Compressor shutdown</td>
+                <td>2024-06-24</td>
+                <td>234 kg/hr</td>
+                <td>45 kg/hr</td>
+                <td>189 kg CH₄</td>
+                <td>113.4 tCO₂e</td>
+                <td><span class="verification-badge not-eligible">NOT ELIGIBLE</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="section-header" style="margin-top:32px">
+          <div class="section-title">ESG Reporting & Compliance</div>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">CSRD Compliance</div>
+            </div>
+            <div style="margin-top:16px">
+              <div class="metric-item">
+                <div class="metric-label">Reporting Period</div>
+                <div class="metric-value">Q2 2024</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Data Completeness</div>
+                <div class="metric-value" style="color:var(--success)">98%</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Audit Trail</div>
+                <div class="metric-value">Complete</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Status</div>
+                <div class="metric-value"><span class="status-badge status-normal">COMPLIANT</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">GRI Standards</div>
+            </div>
+            <div style="margin-top:16px">
+              <div class="metric-item">
+                <div class="metric-label">GRI 305 (Emissions)</div>
+                <div class="metric-value" style="color:var(--success)">✓</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Data Quality</div>
+                <div class="metric-value" style="color:var(--success)">High</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Last Update</div>
+                <div class="metric-value">2024-06-30</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Status</div>
+                <div class="metric-value"><span class="status-badge status-normal">COMPLIANT</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">TCFD Framework</div>
+            </div>
+            <div style="margin-top:16px">
+              <div class="metric-item">
+                <div class="metric-label">Climate Risk Assessment</div>
+                <div class="metric-value" style="color:var(--success)">✓</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Scenario Analysis</div>
+                <div class="metric-value" style="color:var(--success)">Complete</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Disclosure Level</div>
+                <div class="metric-value" style="color:var(--success)">Full</div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-label">Status</div>
+                <div class="metric-value"><span class="status-badge status-normal">COMPLIANT</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUPER-EMITTER PANEL -->
+      <div id="panel-super-emitter" class="panel">
+        <div class="section-header">
+          <div class="section-title">Super-Emitter Event Monitoring</div>
+        </div>
+
+        <div class="alert-box alert-danger">
+          <div class="alert-title">🚨 3 Active Super-Emitter Events — Immediate Action Required</div>
+          <div class="alert-body">Super-emitters are defined as events releasing >500 kg/hr methane. These events require priority response and continuous monitoring.</div>
+        </div>
+
+        <div class="event-list">
+          <div class="event-item" style="border-color:var(--danger)">
+            <div class="event-icon danger">🔥</div>
+            <div class="event-info">
+              <div class="event-title">SE-2024-0089: Compressor Station Alpha-7</div>
+              <div class="event-meta">
+                <div class="event-meta-item">🆔 <strong>SE-2024-0089</strong></div>
+                <div class="event-meta-item">📅 <strong>Started: 2024-06-30 14:23 UTC</strong></div>
+                <div class="event-meta-item">⏱️ <strong>Duration: 4h 23m</strong></div>
+              </div>
+              <div style="margin-top:12px">
+                <div class="metric-grid">
+                  <div class="metric-item">
+                    <div class="metric-label">Peak Emission Rate</div>
+                    <div class="metric-value" style="color:var(--danger)">842 kg/hr</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Total Release</div>
+                    <div class="metric-value">3,687 kg CH₄</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Plume Size</div>
+                    <div class="metric-value">2.4 km²</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Wind Direction</div>
+                    <div class="metric-value">NE @ 18 mph</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Environmental Impact</div>
+                    <div class="metric-value" style="color:var(--danger)">High (87/100)</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Response Status</div>
+                    <div class="metric-value"><span class="status-badge status-warning">IN PROGRESS</span></div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:12px">
+                <div class="alert-box alert-warning">
+                  <div class="alert-body">📍 Dispersion Prediction: Plume moving NE toward residential area (ETA 2.5 hours). Recommend immediate pressure isolation.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-item" style="border-color:var(--danger)">
+            <div class="event-icon danger">💥</div>
+            <div class="event-info">
+              <div class="event-title">SE-2024-0090: Pipeline Junction TX-19</div>
+              <div class="event-meta">
+                <div class="event-meta-item">🆔 <strong>SE-2024-0090</strong></div>
+                <div class="event-meta-item">📅 <strong>Started: 2024-06-30 11:47 UTC</strong></div>
+                <div class="event-meta-item">⏱️ <strong>Duration: 7h 1m</strong></div>
+              </div>
+              <div style="margin-top:12px">
+                <div class="metric-grid">
+                  <div class="metric-item">
+                    <div class="metric-label">Peak Emission Rate</div>
+                    <div class="metric-value" style="color:var(--danger)">687 kg/hr</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Total Release</div>
+                    <div class="metric-value">4,809 kg CH₄</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Plume Size</div>
+                    <div class="metric-value">3.1 km²</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Wind Direction</div>
+                    <div class="metric-value">SW @ 12 mph</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Environmental Impact</div>
+                    <div class="metric-value" style="color:var(--danger)">Critical (94/100)</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Response Status</div>
+                    <div class="metric-value"><span class="status-badge status-critical">CRITICAL ALERT</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-item" style="border-color:var(--warning)">
+            <div class="event-icon warning">⚠️</div>
+            <div class="event-info">
+              <div class="event-title">SE-2024-0091: Valve Cluster OK-07</div>
+              <div class="event-meta">
+                <div class="event-meta-item">🆔 <strong>SE-2024-0091</strong></div>
+                <div class="event-meta-item">📅 <strong>Started: 2024-06-30 16:12 UTC</strong></div>
+                <div class="event-meta-item">⏱️ <strong>Duration: 2h 36m</strong></div>
+              </div>
+              <div style="margin-top:12px">
+                <div class="metric-grid">
+                  <div class="metric-item">
+                    <div class="metric-label">Peak Emission Rate</div>
+                    <div class="metric-value" style="color:var(--warning)">524 kg/hr</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Total Release</div>
+                    <div class="metric-value">1,362 kg CH₄</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Plume Size</div>
+                    <div class="metric-value">1.8 km²</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Wind Direction</div>
+                    <div class="metric-value">E @ 24 mph</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Environmental Impact</div>
+                    <div class="metric-value" style="color:var(--warning)">Moderate (68/100)</div>
+                  </div>
+                  <div class="metric-item">
+                    <div class="metric-label">Response Status</div>
+                    <div class="metric-value"><span class="status-badge status-normal">RESOLVED</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header" style="margin-top:32px">
+          <div class="section-title">Super-Emitter Statistics (Last 30 Days)</div>
+        </div>
+
+        <div class="grid grid-4">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Total Events</div>
+            </div>
+            <div class="card-value danger">17</div>
+            <div class="card-sub">+42% vs previous month</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Avg. Response Time</div>
+            </div>
+            <div class="card-value warning">3.2 hours</div>
+            <div class="card-sub">Target: &lt;2 hours</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Total CH₄ Released</div>
+            </div>
+            <div class="card-value danger">42,847 kg</div>
+            <div class="card-sub">25,708 tCO₂e equivalent</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Ecosystem Impact</div>
+            </div>
+            <div class="card-value warning">High</div>
+            <div class="card-sub">3 events near sensitive areas</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// View switching functionality
+function switchView(view) {
+  // Update nav items
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  event.target.closest('.nav-item').classList.add('active');
+
+  // Update panels
+  document.querySelectorAll('.panel').forEach(panel => {
+    panel.classList.remove('active');
+  });
+  
+  const panelId = 'panel-' + view;
+  const panel = document.getElementById(panelId);
+  if (panel) {
+    panel.classList.add('active');
+  }
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Methane Intelligence Platform loaded');
+});
+</script>
+
+</body>
+</html>
