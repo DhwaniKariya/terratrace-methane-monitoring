@@ -168,7 +168,6 @@ The full research and product narrative behind this prototype lives in [`/docs`]
 - [`TerraTrace_Final_Product_Report.docx`](docs/TerraTrace_Final_Product_Report.docx) — the complete write-up: problem, competitive landscape, solution, product walkthrough, business model, architecture, roadmap
 - [`TerraTrace_Detection_Gap_Research_Brief.docx`](docs/TerraTrace_Detection_Gap_Research_Brief.docx) — deep dive on why the detection trilemma is the real bottleneck
 - [`TerraTrace_Demo_Script.docx`](docs/TerraTrace_Demo_Script.docx) — the live demo walkthrough script
-- [`PlumeAI_Project_Document.docx`](docs/PlumeAI_Project_Document.docx) — the original data-model / feature specification (project's working name before TerraTrace)
 - [`TerraTrace_Pitch_Deck.pptx`](docs/TerraTrace_Pitch_Deck.pptx) — the pitch deck
 
 ---
