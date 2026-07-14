@@ -229,10 +229,33 @@
 @media (max-width: 640px) {
   .imagery-row {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
   }
 
   .pipeline-stepper {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+  }
+
+  .pipeline-step {
+    padding: 0.8rem;
+  }
+
+  .pass-legend {
+    gap: 0.85rem;
+    font-size: 0.72rem;
+  }
+
+  .processing-console {
+    min-height: 120px;
+    max-height: 170px;
+    padding: 0.85rem 1rem;
+    font-size: 0.74rem;
+  }
+
+  .run-pass-btn {
+    width: 100%;
+    text-align: center;
   }
 }
 

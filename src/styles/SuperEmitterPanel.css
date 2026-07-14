@@ -29,3 +29,18 @@
   color: #C53030;
   font-style: italic;
 }
+
+/* --- Mobile: a compact top-right chip instead of a card covering the map --- */
+@media (max-width: 640px) {
+  .super-emitter-panel {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: min(68vw, 260px);
+    max-height: 50vh;
+  }
+
+  .super-emitter-panel h3 {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.82rem;
+  }
+}

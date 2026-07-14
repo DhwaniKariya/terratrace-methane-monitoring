@@ -199,3 +199,42 @@
 .trend-arrow.increasing { color: #E53E3E; }
 .trend-arrow.decreasing { color: #38A169; }
 .trend-arrow.stable { color: #718096; }
+
+/* --- Mobile --- */
+@media (max-width: 640px) {
+  .panel {
+    padding: 1.1rem 1rem;
+  }
+
+  .panel-header h2 {
+    font-size: 1.15rem;
+  }
+
+  .panel-header p {
+    font-size: 0.85rem;
+  }
+
+  .kpi-grid {
+    gap: 0.75rem;
+  }
+
+  .kpi-card {
+    padding: 1rem;
+  }
+
+  .kpi-card .kpi-value {
+    font-size: 1.4rem;
+  }
+
+  .data-card {
+    padding: 0.9rem 1.1rem;
+  }
+
+  .chart-card {
+    padding: 1rem;
+  }
+
+  .chart-card h3 {
+    font-size: 0.92rem;
+  }
+}

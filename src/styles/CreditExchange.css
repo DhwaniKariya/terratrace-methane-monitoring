@@ -115,3 +115,20 @@
 .badge-pill.suggested { background: #E2E8F0; color: #4A5568; }
 .badge-pill.proposed { background: #FEEBC8; color: #C05621; }
 .badge-pill.retired { background: #E9D8FD; color: #6B46C1; }
+
+/* --- Mobile --- */
+@media (max-width: 640px) {
+  .exchange-explainer {
+    padding: 0.85rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .trade-card {
+    padding: 0.9rem 1.1rem;
+  }
+
+  .trade-status-actions button {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}

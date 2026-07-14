@@ -17,6 +17,21 @@
   width: min(320px, 80vw);
 }
 
+/* --- Mobile: sidebar becomes a floating drawer instead of squeezing the map --- */
+@media (max-width: 640px) {
+  .collapsible-sidebar.collapsed {
+    width: 48px;
+  }
+
+  .collapsible-sidebar.expanded {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: min(280px, 82vw);
+    z-index: 1000;
+    box-shadow: 6px 0 24px rgba(0, 0, 0, 0.2);
+  }
+}
+
 /* Expand/Collapse Arrow Button */
 .expand-arrow {
   position: absolute;
