@@ -35,11 +35,27 @@ const TABS = [
 
 // react-leaflet's MapContainer only applies center/zoom on mount, so switching
 // branches without this leaves the map stuck on the previous location.
-function RecenterOnBranchChange({ lat, lng, zoom }) {
+//
+// On mobile, the super-emitter list docks as a bottom sheet over the map. Since
+// incidents are generated as a tight cluster around the branch's own coordinates,
+// the true geographic center - right where the map centers by default - is
+// exactly where that cluster sits. Left alone, the sheet would hide it on every
+// single branch. Shifting the visual center up (via project/unproject, since
+// setView has no pixel-offset option) keeps the cluster inside the visible strip
+// above the sheet instead.
+function RecenterOnBranchChange({ lat, lng, zoom, hasBottomSheet }) {
   const map = useMap()
   useEffect(() => {
-    map.setView([lat, lng], zoom)
-  }, [lat, lng, zoom, map])
+    const isMobile = window.matchMedia('(max-width: 640px)').matches
+    if (hasBottomSheet && isMobile) {
+      const size = map.getSize()
+      const centerPoint = map.project([lat, lng], zoom)
+      const shiftedPoint = centerPoint.add([0, size.y * 0.19])
+      map.setView(map.unproject(shiftedPoint, zoom), zoom, { animate: false })
+    } else {
+      map.setView([lat, lng], zoom, { animate: false })
+    }
+  }, [lat, lng, zoom, hasBottomSheet, map])
   return null
 }
 
@@ -225,7 +241,12 @@ function Dashboard() {
                 </div>
               ) : (
                 <MapContainer center={[branch.lat, branch.lng]} zoom={7} className="map">
-                  <RecenterOnBranchChange lat={branch.lat} lng={branch.lng} zoom={7} />
+                  <RecenterOnBranchChange
+                    lat={branch.lat}
+                    lng={branch.lng}
+                    zoom={7}
+                    hasBottomSheet={filteredIncidents.some(i => i.superEmitter)}
+                  />
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                   {filteredIncidents.map(incident => (
                     <CircleMarker

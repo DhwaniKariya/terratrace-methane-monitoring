@@ -149,10 +149,11 @@
     border-radius: 20px;
   }
 
+  /* Decorative date-range chip. On mobile there's nowhere to put it that
+     doesn't collide with the super-emitter sheet or a marker popup at some
+     point - it's not worth fighting for screen space against actual
+     content, so it's dropped rather than chased around the map. */
   .timeline {
-    bottom: 1rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-    max-width: calc(100vw - 2rem);
+    display: none;
   }
 }

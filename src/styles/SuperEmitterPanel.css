@@ -30,17 +30,42 @@
   font-style: italic;
 }
 
-/* --- Mobile: a compact top-right chip instead of a card covering the map --- */
+/* --- Mobile: a bottom sheet that docks under a fully visible map,
+   instead of a card floating over most of a small map --- */
 @media (max-width: 640px) {
   .super-emitter-panel {
-    top: 0.75rem;
-    right: 0.75rem;
-    width: min(68vw, 260px);
-    max-height: 50vh;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 38vh;
+    background: white;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.18);
+    padding: 0 0.85rem calc(0.75rem + env(safe-area-inset-bottom));
+  }
+
+  .super-emitter-panel::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 4px;
+    background: #e2e8f0;
+    border-radius: 2px;
+    margin: 0.55rem auto 0.4rem;
   }
 
   .super-emitter-panel h3 {
-    padding: 0.6rem 0.75rem;
-    font-size: 0.82rem;
+    position: sticky;
+    top: 0;
+    background: white;
+    margin: 0 -0.85rem 0.6rem;
+    padding: 0.35rem 0.85rem 0.6rem;
+    border-radius: 0;
+    box-shadow: none;
+    border-left: none;
+    border-bottom: 1px solid #FED7D7;
+    font-size: 0.85rem;
   }
 }
