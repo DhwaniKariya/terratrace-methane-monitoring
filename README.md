@@ -6,6 +6,10 @@
 
 Built during the **ICAM Product Development Sprint, July 2026**.
 
+### 🔗 [**Open the live prototype →**](https://dhwanikariya.github.io/terratrace-methane-monitoring/)
+
+No install, no clone, nothing to run — it's a live, click-through dashboard on realistic mock data. Just open the link.
+
 ![TerraTrace — Branch Locations](docs/screenshots/01-home.png)
 
 ---
@@ -120,7 +124,9 @@ The working prototype is a single React dashboard implementing all seven modules
 - **Recharts** — risk trend & forecast charting
 - **Tabler Icons, date-fns** — UI icons and date handling
 
-## Getting started
+## Running it locally
+
+The [live demo link](https://dhwanikariya.github.io/terratrace-methane-monitoring/) above is all you need to see the prototype — the steps below are only for working on the source.
 
 ```bash
 npm install

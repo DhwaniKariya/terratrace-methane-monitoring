@@ -57,12 +57,13 @@ function DataPipeline({ branchId }) {
   // showing the visually identical frame - this is clearly labeled as
   // illustrative, not a live tile for each specific location.
   const hueShift = (branchId * 35) % 360
+  const satelliteImageUrl = `${import.meta.env.BASE_URL}img/satellite-baku.jpg`
   const rawImageStyle = {
-    backgroundImage: 'url(/img/satellite-baku.jpg)',
+    backgroundImage: `url(${satelliteImageUrl})`,
     filter: `hue-rotate(${hueShift}deg) saturate(1.15) contrast(1.05)`,
   }
   const processedImageStyle = {
-    backgroundImage: 'url(/img/satellite-baku.jpg)',
+    backgroundImage: `url(${satelliteImageUrl})`,
     filter: `hue-rotate(${hueShift}deg) saturate(1.15) brightness(0.85)`,
   }
 

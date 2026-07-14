@@ -1,3 +1,5 @@
+const IMG_BASE = import.meta.env.BASE_URL
+
 export const branches = [
   {
     id: 1,
@@ -6,7 +8,7 @@ export const branches = [
     lat: 40.4093,
     lng: 49.8671,
     incidents: 61,
-    image: '/img/1.jpg',
+    image: `${IMG_BASE}img/1.jpg`,
     credits: 38,
     emissions: [
       { label: 'Methane', value: 8, color: '#E53E3E' },
@@ -21,7 +23,7 @@ export const branches = [
     lat: 41.2,
     lng: 50.5,
     incidents: 24,
-    image: '/img/2.jpg',
+    image: `${IMG_BASE}img/2.jpg`,
     credits: 42,
     emissions: [
       { label: 'Methane', value: 5, color: '#E53E3E' },
@@ -36,7 +38,7 @@ export const branches = [
     lat: 41.0082,
     lng: 28.9784,
     incidents: 18,
-    image: '/img/3.jpg',
+    image: `${IMG_BASE}img/3.jpg`,
     credits: 45,
     emissions: [
       { label: 'Methane', value: 3, color: '#E53E3E' },
@@ -51,7 +53,7 @@ export const branches = [
     lat: 40.1792,
     lng: 44.4991,
     incidents: 7,
-    image: '/img/4.jpg',
+    image: `${IMG_BASE}img/4.jpg`,
     credits: 48,
     emissions: [
       { label: 'Methane', value: 2, color: '#E53E3E' },
