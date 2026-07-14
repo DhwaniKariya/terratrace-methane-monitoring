@@ -3,7 +3,7 @@ import { branches } from '../data/mockData'
 import '../styles/Header.css'
 import logo from '../assets/logo.png'
 
-function Header({ selectedBranch, onBranchChange, onRunAnalysis, isLoading, loadingStep, loadingSteps }) {
+function Header({ selectedBranch, onBranchChange, onRunAnalysis, isLoading, loadingStep, loadingSteps, activeTab }) {
   const navigate = useNavigate()
   const location = useLocation()
   const isDashboard = location.pathname.includes('/dashboard/')
@@ -15,8 +15,8 @@ function Header({ selectedBranch, onBranchChange, onRunAnalysis, isLoading, load
         <h1>TerraTrace</h1>
       </div>
       <div className="header-center">
-        <select 
-          className="dropdown" 
+        <select
+          className="dropdown"
           value={selectedBranch || branches[0].id}
           onChange={(e) => onBranchChange && onBranchChange(parseInt(e.target.value))}
         >
@@ -24,9 +24,11 @@ function Header({ selectedBranch, onBranchChange, onRunAnalysis, isLoading, load
         </select>
         {isDashboard && (
           <>
-            <button className="run-analysis-btn" onClick={onRunAnalysis} disabled={isLoading}>
-              {isLoading ? loadingSteps[loadingStep] : '▶ Run Analysis'}
-            </button>
+            {activeTab !== 'map' && (
+              <button className="run-analysis-btn" onClick={onRunAnalysis} disabled={isLoading}>
+                {isLoading ? loadingSteps[loadingStep] : '▶ Run Analysis'}
+              </button>
+            )}
             <button className="back-btn" onClick={() => navigate('/')}>← All Branches</button>
           </>
         )}

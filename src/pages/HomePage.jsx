@@ -10,6 +10,7 @@ function HomePage() {
 
   const handleBranchChange = (branchId) => {
     setSelectedBranch(branchId)
+    navigate(`/dashboard/${branchId}`)
   }
 
   return (
@@ -20,7 +21,7 @@ function HomePage() {
       />
 
       <main className="main-content">
-        <h2>Branch Locations</h2>
+        <h2>Client Locations</h2>
         <p className="subtitle">Select a branch to view methane monitoring dashboard</p>
         
         <div className="branch-grid">

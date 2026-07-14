@@ -167,7 +167,7 @@ function CollapsibleSidebar({ selectedBranch, credits, emissions, filters, onFil
                   <div className="credit-info">
                     <span>Weekly limit: 100</span>
                     <div className="progress-bar">
-                      <div className="progress-fill" style={{ width: `${(credits / 50) * 100}%` }}></div>
+                      <div className="progress-fill" style={{ width: `${(credits / 100) * 100}%` }}></div>
                     </div>
                   </div>
                 </div>

@@ -1,0 +1,98 @@
+.scorecard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.framework-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.1rem 1.3rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #a0aec0;
+}
+
+.framework-card.status-good { border-left-color: #38A169; }
+.framework-card.status-warn { border-left-color: #DD6B20; }
+.framework-card.status-bad { border-left-color: #E53E3E; }
+.framework-card.status-info { border-left-color: #4318FF; }
+
+.framework-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+}
+
+.framework-name {
+  font-weight: 700;
+  color: #1a202c;
+  font-size: 0.95rem;
+}
+
+.framework-evidence {
+  font-size: 0.82rem;
+  color: #4a5568;
+  margin-bottom: 0.4rem;
+}
+
+.framework-deadline {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  font-style: italic;
+}
+
+.badge-pill.good { background: #C6F6D5; color: #2F855A; }
+.badge-pill.warn { background: #FEEBC8; color: #C05621; }
+.badge-pill.bad { background: #FED7D7; color: #C53030; }
+.badge-pill.info { background: #E9E4FF; color: #4318FF; }
+
+.provenance-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.provenance-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: #4a5568;
+}
+
+.provenance-bar-track {
+  flex: 1;
+  height: 8px;
+  background: #edf2f7;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.provenance-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4318FF, #7c5cff);
+  border-radius: 4px;
+}
+
+.ethics-note {
+  background: #EEF2FF;
+  border: 1px solid #C7D2FE;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  font-size: 0.85rem;
+  color: #3730A3;
+  line-height: 1.55;
+}
+
+.ethics-note ul {
+  margin: 0.5rem 0 0 1.1rem;
+  padding: 0;
+}
+
+.ethics-note li {
+  margin-bottom: 0.3rem;
+}

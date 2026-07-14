@@ -1,0 +1,31 @@
+.super-emitter-panel {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 320px;
+  max-height: calc(100% - 3rem);
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.super-emitter-panel h3 {
+  background: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+  color: #C53030;
+  border-left: 4px solid #E53E3E;
+}
+
+.super-emitter-card {
+  border-left: 4px solid #E53E3E;
+}
+
+.dispersion-note {
+  margin-top: 0.6rem;
+  font-size: 0.78rem;
+  color: #C53030;
+  font-style: italic;
+}

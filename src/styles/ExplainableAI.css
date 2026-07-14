@@ -1,0 +1,58 @@
+.benchmark-citation {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.reliability-footnote {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  margin-top: 0.5rem;
+  text-transform: capitalize;
+}
+
+.incident-select {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.85rem;
+  color: #2d3748;
+  background: white;
+  margin-bottom: 1rem;
+}
+
+.explanation-text {
+  font-size: 0.85rem;
+  color: #4a5568;
+  line-height: 1.55;
+  background: #F7FAFC;
+  border-left: 3px solid #4318FF;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin: 0.75rem 0;
+}
+
+.model-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.model-card-text {
+  font-size: 0.85rem;
+  color: #4a5568;
+  line-height: 1.5;
+  margin-top: 0.3rem;
+}
+
+.ethics-note {
+  background: #EEF2FF;
+  border: 1px solid #C7D2FE;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  font-size: 0.85rem;
+  color: #3730A3;
+  line-height: 1.55;
+}
