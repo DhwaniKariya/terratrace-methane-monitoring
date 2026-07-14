@@ -63,33 +63,35 @@ function CarbonCreditExchange() {
         </div>
       </div>
 
-      <table className="participant-table">
-        <thead>
-          <tr>
-            <th>Participant</th>
-            <th>Region</th>
-            <th>Allocated</th>
-            <th>Projected emissions</th>
-            <th>Balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          {sortedParticipants.map((p) => (
-            <tr key={p.id}>
-              <td>
-                <span className="participant-name">{p.name}</span>
-                {p.type === 'own-branch' && <span className="participant-tag">Your network</span>}
-              </td>
-              <td>{p.region}</td>
-              <td>{p.allocatedCreditsT.toLocaleString()} t</td>
-              <td>{p.projectedEmissionsT.toLocaleString()} t</td>
-              <td className={p.balanceT >= 0 ? 'balance-surplus' : 'balance-deficit'}>
-                {p.balanceT >= 0 ? '+' : ''}{p.balanceT.toLocaleString()} t
-              </td>
+      <div className="table-scroll">
+        <table className="participant-table">
+          <thead>
+            <tr>
+              <th>Participant</th>
+              <th>Region</th>
+              <th>Allocated</th>
+              <th>Projected emissions</th>
+              <th>Balance</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {sortedParticipants.map((p) => (
+              <tr key={p.id}>
+                <td>
+                  <span className="participant-name">{p.name}</span>
+                  {p.type === 'own-branch' && <span className="participant-tag">Your network</span>}
+                </td>
+                <td>{p.region}</td>
+                <td>{p.allocatedCreditsT.toLocaleString()} t</td>
+                <td>{p.projectedEmissionsT.toLocaleString()} t</td>
+                <td className={p.balanceT >= 0 ? 'balance-surplus' : 'balance-deficit'}>
+                  {p.balanceT >= 0 ? '+' : ''}{p.balanceT.toLocaleString()} t
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="panel-header">
         <h2 style={{ fontSize: '1.05rem' }}>Suggested trades</h2>

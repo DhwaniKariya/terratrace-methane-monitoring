@@ -14,7 +14,7 @@
 }
 
 .collapsible-sidebar.expanded {
-  width: 320px;
+  width: min(320px, 80vw);
 }
 
 /* Expand/Collapse Arrow Button */

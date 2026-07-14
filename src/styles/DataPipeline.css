@@ -226,6 +226,16 @@
   position: relative;
 }
 
+@media (max-width: 640px) {
+  .imagery-row {
+    grid-template-columns: 1fr;
+  }
+
+  .pipeline-stepper {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 .pipeline-step {
   background: white;
   border-radius: 12px;

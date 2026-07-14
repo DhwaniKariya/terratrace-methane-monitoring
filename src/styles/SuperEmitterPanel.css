@@ -2,7 +2,7 @@
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
-  width: 320px;
+  width: min(320px, calc(100vw - 3rem));
   max-height: calc(100% - 3rem);
   overflow-y: auto;
   z-index: 50;
